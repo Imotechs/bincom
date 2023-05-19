@@ -1,0 +1,121 @@
+{%extends 'base.html'%}
+{%load static%}
+{%block content%}
+<style>
+    form{
+        width: 100%;
+    }
+    form select{
+        width: 70%;
+        height: 30px;
+        margin-top: 20px;
+    }
+</style>
+<main role="main" class="container" style="margin-top: 8px;">
+  <div class="row">
+      <div class="card-body content-section">
+        <div class="maincard row">
+        <div class="col-md-10">
+            <form action="" method="post">
+                {%csrf_token%}
+                <select name="lga" id="">
+                    {%if search%}
+                    <option  value="{{search.lga_id}}">{{search.lga_name}}</option>
+
+                    {%else%}
+                    <option  value="none">Select LGA to Search for Result</option>
+                    {%endif%}
+                    {%for item in lga%}
+                    <option  value="{{item.lga_id}}">{{item.lga_name}}</option>
+                    {%endfor%}
+                </select>
+                
+                <button type="submit" class="searchbtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search-heart-fill" viewBox="0 0 16 16">
+                    <path d="M6.5 13a6.474 6.474 0 0 0 3.845-1.258h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.008 1.008 0 0 0-.115-.1A6.471 6.471 0 0 0 13 6.5 6.502 6.502 0 0 0 6.5 0a6.5 6.5 0 1 0 0 13Zm0-8.518c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.69 0-5.018Z"/>
+                    </svg>
+              </button>
+            </form>
+           <!-- <p>Search for <strong>{{search.lga_name}}</strong>  </p> -->
+        </div>
+        {% if party_totals %}
+        <div class="col-md-2 maincard">
+            {%for party,total in party_totals.items %}
+            <p style="color:brown">{{party}}: {{total}}</p>
+            {%endfor%}
+        </div> 
+        {%endif%}
+        {%for item in lga_check%}
+        {{item.party_abbreviation}}:{{item.party_score}}
+        {%endfor%}
+  
+            <p class="card-text" > 
+              
+             <small class="text-muted" style="color: orange;" style="font-size: smaller;float: left;">{{object.author}}&nbsp;</i>{{object.polling_unit_number}}</small>
+              <small class="text-dark text-muted" style="font-size: smaller;float: right;"> {{object.updated_on|date:'D,m,Y'}}</small></p>  
+        </div>
+        {% if poll_units %}
+
+        <h2>Polling Units:
+           
+        </h2>
+        <ul>
+            {% for unit in poll_units %}
+            <div class="maincard">
+                <li>
+                    PU Name: &nbsp; 
+                    {%if unit.result == none %}
+                    <strong> No name</strong>
+                    {%else%}
+                    <strong> {{ unit.unit_name }}</strong>
+                    {%endif%}
+ 
+                    <br>
+                    PU Number: &nbsp; <strong>{{ unit.unit_id }}</strong> 
+                    <br>
+                    <strong>Result:</strong>
+                    <ul>
+                        {%if not  unit.result%}
+                        <li><p style="color: red;">No Result</p></li>
+                        {%else%}
+                        {% for res in unit.result %}
+                        <li>
+                            {{ res.party_abbreviation}}:{{ res.party_score }},
+                        </li>                            
+                        {% endfor %}
+                        {%endif%}
+                    </ul>
+                </li>
+            </div>
+            {% endfor %}
+        </ul>
+    {% elif poll_units and not unit.result %}
+    <p>No results available.</p>
+
+    {%else%}
+    {% endif %}
+<!--         
+        {%if poll_units%}
+        {%for unit in poll_units%}
+
+            <h3 class="card-title text-center"><small class="text-muted">{{unit.polling_unit_name}}</small></h3>
+            <p class="card-text"><i><small class="text-muted" style="color: orange;">{{unit.polling_unit_number}}</small></i></p>
+            
+            <p class="card-title" style="font-size: smaller;">
+            
+            </hp>
+        </div>
+        {%endfor%}
+        {%endif%} -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  
+
+
+</div>
+{%endblock content%}
